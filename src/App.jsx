@@ -1,41 +1,38 @@
-import { useState } from 'react'
-import User from './User'
+import React, {useState, useEffect} from 'react';
+import './App.css';
+import axios from 'axios';
+import MealCard from './components/MealCard';
+import Nav from './components/Nav';
 
-function App() {
+const App = () => {
 
-  const users = [
-    {
-      name: 'Marie',
-      lastname: 'Ksnk',
-      age: 27,
-      profession: 'Webdesigneur'
-    },
-    {
-      name: 'John',
-      lastname: 'Doe',
-      age: 30,
-      profession: 'Software Engineer'
-    },
-    {
-      name: 'Alice',
-      lastname: 'Smith',
-      age: 25,
-      profession: 'Graphic Designer'
-    },
-    {
-      name: 'Robert',
-      lastname: 'Brown',
-      age: 40,
-      profession: 'Project Manager'
-    }
-  ];
+    const [meals, setMeals] = useState([]);
+  
+    useEffect(() => {
+      
+      const fetchMeals = async () => {
+        try {
+          const response = await axios.get('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+          setMeals(response.data.meals);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      fetchMeals();
+    }, []); 
+
 
   return (
     <>
-
-    {users.map((user, index) => (
-      <User key={index} {...user} />
-    ))}
+    <div className='cards'>
+    <Nav />
+    <h1>Les plats disponibles</h1>
+    <div>
+        {meals.map((meal) => (
+          <MealCard key={meal.idMeal} meal={meal} />
+        ))}
+    </div></div>
     </>
   )
 }
